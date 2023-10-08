@@ -11,7 +11,7 @@ which will convert into QIF format that can be easily imported into Quicken
 08.10.2023
 
 '''
-
+import os
 import re
 import pandas as pd
 import datetime as dt
@@ -43,6 +43,9 @@ def transform_to_qif () :
     read_config()
 
     # Reading the excel
+    # Get the input file path
+    input_path = get_input_file('Excel input',['.xls','.xlsx'])
+
     print("Reading the input file for transformation: " + input_path)
     dfXls = pd.read_excel(input_path)
 
@@ -131,7 +134,8 @@ def transform_category_with_memo(desc):
 #
 def read_config():
     global mapping_conf
-    global output_list    
+    global output_list   
+    global input_path 
 
     config = cp.ConfigParser()
     config.read("D:\python-ws\convert_to_qif\q.properties")
@@ -156,6 +160,40 @@ def read_config():
 
     print("Configuration read successfully, total keywords categorized : " + str(len(mapping_conf)))        
     
+
+
+#
+# This method takes user input for the desired input or configuration files
+# First it will check in current directory and display the user with available options
+# however if the user does not like then they may select option to type in whole path
+# from another direcctory
+#
+def get_input_file(file_typ_name,allowed_ext):
+    # Get input files
+    # Get the current working directory
+    curr_dir = os.getcwd()
+
+    # List all files in the current directory
+    input_files = [f for f in os.listdir(curr_dir) if any(f.endswith(ext) for ext in allowed_ext)]
+    manual_input = True
+
+    if(len(input_files) > 0) :
+        print(f"Below {file_typ_name} files found in current directory ::: ")
+        i = 0
+        for f in input_files:
+            print(f'[{i}] {f}')
+
+        indx_input = int(input("Type index number to select this file or non-existing other number to manually enter file: "))
+        
+        if(indx_input <= len(input_files)-1 and indx_input > -1) :
+            manual_input = False
+            input_path = os.path.join(curr_dir, input_files[int(indx_input)])
+            
+    if(manual_input):
+        input_path = input(f"Please enter {file_typ_name} file path: ")
+    
+    return input_path
+
 
 def write_output_list():
     with open("D:\python-ws\convert_to_qif\out.QIF","w") as file:
