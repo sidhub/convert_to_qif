@@ -1,15 +1,16 @@
-#
-# Program to transform the xls into Quicken Interchange Format (QIF)
-# This output can then be used to import directly into Quicken
-# 
-# Normally those banks/credit card statements that cannot be directly synchronized
-# by Quicken, one can export the statement in excel and then do some basic
-# formatting to be used by this program. After this it can be fed to this program
-# which will convert into QIF format that can be easily imported into Quicken
-# 
-# @devnscse
-# 08.10.2023
-#
+'''''
+Program to transform the xls into Quicken Interchange Format (QIF)
+This output can then be used to import directly into Quicken
+ 
+Normally those banks/credit card statements that cannot be directly synchronized
+by Quicken, one can export the statement in excel and then do some basic
+formatting to be used by this program. After this it can be fed to this program
+which will convert into QIF format that can be easily imported into Quicken
+ 
+@devnscse
+08.10.2023
+
+'''
 
 import re
 import pandas as pd
