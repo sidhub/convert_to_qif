@@ -61,7 +61,7 @@ def transform_to_qif () :
             output_list.append(transfrom_date(t_date))
             output_list.append("U"+str(t_amt))
             output_list.append("T"+str(t_amt))
-            output_list.append("*")
+            output_list.append("C*")
             transform_category(t_desc)
             output_list.append('^')
     
