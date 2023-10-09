@@ -18,11 +18,6 @@ import datetime as dt
 import configparser as cp
 import global_var as gvar
 
-
-input_path = ""
-input_format = ''
-
-
 # This will store the mapping given in the configuration file
 # for fast matching
 mapping_conf = {}
@@ -66,7 +61,7 @@ def transform_to_qif () :
             output_list.append(transfrom_date(t_date))
             output_list.append("U"+str(t_amt))
             output_list.append("T"+str(t_amt))
-            output_list.append("C*")
+            output_list.append("*")
             transform_category(t_desc)
             output_list.append('^')
     
@@ -142,7 +137,6 @@ def read_config():
     gvar.identifier_t_text = config["general"]["col_t_type_credit_text"]
     gvar.index_t_amt = int(config["general"]["col_t_type_amt"])
     
-
     output_list.append('!Type:'+config["general"]["type"])
 
     # Read the mapping and cache it so that it can be used
@@ -156,7 +150,6 @@ def read_config():
     print("Configuration read successfully, total keywords categorized : " + str(len(mapping_conf)))        
     
 
-
 #
 # This method takes user input for the desired input or configuration files
 # First it will check in current directory and display the user with available options
@@ -164,6 +157,7 @@ def read_config():
 # from another direcctory
 #
 def get_input_file(file_typ_name,allowed_ext):
+    input_path = ''
     # Get input files
     # Get the current working directory
     curr_dir = os.getcwd()
@@ -195,10 +189,16 @@ def get_input_file(file_typ_name,allowed_ext):
 # This method will be used to write the output QIF file
 #
 def write_output_list():
-    with open("D:\python-ws\convert_to_qif\out.QIF","w") as file:
+    output_path = input("Enter output file path or just type enter to write here :")
+    if(output_path.strip() == '') :
+        output_path = os.path.join(os.getcwd(),'output.QIF')
+
+    print('The output file will be written at ' + output_path)
+    with open(output_path,"w") as file:
         for str in output_list:
             file.write(str+"\n")
-    print("Output has been written....")
+
+    print("Output has been written....Program Finished")
 
 
 # Call this main method to begin transformation
