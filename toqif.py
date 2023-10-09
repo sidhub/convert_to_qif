@@ -19,7 +19,7 @@ import configparser as cp
 import global_var as gvar
 
 
-input_path = "D:\python-ws\\convert_to_qif\\q.xlsx"
+input_path = ""
 input_format = ''
 
 
@@ -62,7 +62,6 @@ def transform_to_qif () :
             
             if(t_type == 'Debit'):
                 t_amt *= -1
-            #print(f'Type: {t_type} Amt: {t_amt}')
             
             output_list.append(transfrom_date(t_date))
             output_list.append("U"+str(t_amt))
@@ -87,17 +86,9 @@ def transfrom_date(inDate):
     return "D" + str(date_object.month) + "/" + str(dt_day) + "'" + str(date_object.year - century)    
 
 #
-# Function to get inputs from user
+# This method will search for keywords from the configured list from the transaction description.
+# And it will try to determine the Category and Memo (if configured)
 #
-def get_input():
-    #TODO: To be implemented
-    global input_path , input_format
-    input_path = input('Give me xls path: ')
-    input_format = input('''Allowed Bank format
-                         1) Bank1
-                         Enter number: ''' )
-
-
 def transform_category(desc):
     global output_list
     strDesc = str(desc)
@@ -119,7 +110,9 @@ def transform_category(desc):
         output_list.append("P"+strDesc)
         output_list.append("LMisc")
 
-
+#
+# If the category is found to be configured with Memo then this method will be called.
+#
 def transform_category_with_memo(desc):
     global output_list
     strDesc = str(desc)
@@ -134,11 +127,13 @@ def transform_category_with_memo(desc):
 #
 def read_config():
     global mapping_conf
-    global output_list   
-    global input_path 
+    global output_list       
 
+    config_file_path = get_input_file('Properties',['.properties'])
+    print(f'Configuration file: {config_file_path} ')
+    
     config = cp.ConfigParser()
-    config.read("D:\python-ws\convert_to_qif\q.properties")
+    config.read(config_file_path)
     
     # Read and populate general configuration    
     gvar.index_t_date = int(config["general"]["col_no_t_date"])
@@ -176,25 +171,29 @@ def get_input_file(file_typ_name,allowed_ext):
     # List all files in the current directory
     input_files = [f for f in os.listdir(curr_dir) if any(f.endswith(ext) for ext in allowed_ext)]
     manual_input = True
-
+    print("\n")
     if(len(input_files) > 0) :
         print(f"Below {file_typ_name} files found in current directory ::: ")
         i = 0
         for f in input_files:
             print(f'[{i}] {f}')
+            i += 1
 
         indx_input = int(input("Type index number to select this file or non-existing other number to manually enter file: "))
         
         if(indx_input <= len(input_files)-1 and indx_input > -1) :
             manual_input = False
             input_path = os.path.join(curr_dir, input_files[int(indx_input)])
-            
+
+    # If user decided to manually input or if no matching files found in the current directory
     if(manual_input):
         input_path = input(f"Please enter {file_typ_name} file path: ")
     
     return input_path
 
-
+#
+# This method will be used to write the output QIF file
+#
 def write_output_list():
     with open("D:\python-ws\convert_to_qif\out.QIF","w") as file:
         for str in output_list:
