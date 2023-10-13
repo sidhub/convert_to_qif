@@ -38,3 +38,11 @@ One can use built in the Import QIF file to import the new transactions from the
 
 _Note : The Quicken may not allow to import from the external QIF file into the accounts of type bank, credit card etc. In such you can create a new account of CASH type. Import them into this account, after that you may review the import and changes the category as desired if the mapping didnt resulted properly and after review select all the transaction and right click to select Move Transaction to the desired Bank, Credit card account._
 
+
+# Sample files
+Two sample files included:
+1) sample.properties : property file sample
+2) sample_input.xlsx : Sample input transaction excel downloaded from bank or card statement and modified to remove merge columns and other formatting
+
+# Possible Error
+It may be possible that the program fails in reading the transaction date column due to date format. In this case one may change the date format in the program itself. Please change the variable name *XLS_DATE_FORMAT* in toqif.py file
