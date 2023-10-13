@@ -103,7 +103,7 @@ def transform_category(desc):
     if not found :
         # No mapping found categorize as misc adding the whole text in payee
         output_list.append("P"+strDesc)
-        output_list.append("LMisc")
+        output_list.append("L"+gvar.default_category)
 
 #
 # If the category is found to be configured with Memo then this method will be called.
@@ -131,11 +131,12 @@ def read_config():
     config.read(config_file_path)
     
     # Read and populate general configuration    
-    gvar.index_t_date = int(config["general"]["col_no_t_date"])
-    gvar.index_t_desc = int(config["general"]["col_no_desc"])
-    gvar.index_t_type = int(config["general"]["col_no_t_type"])
+    gvar.index_t_date = int(config["general"]["col_no_t_date"]) - 1
+    gvar.index_t_desc = int(config["general"]["col_no_desc"]) - 1
+    gvar.index_t_type = int(config["general"]["col_no_t_type"]) - 1
     gvar.identifier_t_text = config["general"]["col_t_type_credit_text"]
-    gvar.index_t_amt = int(config["general"]["col_t_type_amt"])
+    gvar.index_t_amt = int(config["general"]["col_t_type_amt"]) - 1
+    gvar.default_category = config["general"]["default_category"]
     
     output_list.append('!Type:'+config["general"]["type"])
 
